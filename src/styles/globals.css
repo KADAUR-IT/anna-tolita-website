@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@font-face {
+    src: url("../assets/fonts/Rockwell-Condensed\ Bold.ttf");
+    font-family: "Rockwell_Condensed";
+}
+
+:root
+{
+    --color-lila: #A37FA3;
+    --color-green: #828F6A;
+    --color-cream: #F6F1E7;
+    --color-dark-cream: #DCCBB3;
+}
+
+.navbar-icons
+{
+    svg{
+        height: 50px;
+        width: auto;
+    }
+
+    a{
+        width: 90px;
+        height: 90px;
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .link-active
+    {
+        background-color: var(--color-green);
+        color: var(--color-cream);
+    }
+}
+
+.corner
+{
+    --s: 50px;
+    mask:
+    conic-gradient(at var(--s) var(--s),#0000 75%,#000 0)
+    0 0/calc(100% - var(--s)) calc(100% - var(--s)),
+    linear-gradient(#000 0 0) content-box;;
+    -webkit-mask:
+    conic-gradient(at var(--s) var(--s),#0000 75%,#000 0)
+    0 0/calc(100% - var(--s)) calc(100% - var(--s)),
+    linear-gradient(#000 0 0) content-box;
+}

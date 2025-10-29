@@ -2,60 +2,42 @@ import { headers as getHeaders } from 'next/headers.js'
 import Image from 'next/image'
 import { getPayload } from 'payload'
 import React from 'react'
-import { fileURLToPath } from 'url'
-import path from 'path'
 
 import config from '@/payload.config'
-import './styles.css'
+import { Media } from '@/payload-types'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons'
 
 export default async function HomePage() {
   const headers = await getHeaders()
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
 
-  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
+  const docs = await payload.db.collections["media"].aggregate([{$sample: {size: 1}}]).exec()
+
+  if(!docs.length)
+  {
+    return
+  }
+
+  const imageBack = docs[0] as Media
 
   return (
-    <div className="home">
-      <div className="content">
-        <picture>
-          <source srcSet="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg" />
-          <Image
-            alt="Payload Logo"
-            height={65}
-            src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg"
-            width={65}
-          />
-        </picture>
-        {!user && <h1>Welcome to your new project.</h1>}
-        {user && <h1>Welcome back, {user.email}</h1>}
-        <div className="links">
-          <a
-            className="admin"
-            href={payloadConfig.routes.admin}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Go to admin panel
-          </a>
-          <a
-            className="docs"
-            href="https://payloadcms.com/docs"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Documentation
-          </a>
+      <div className='relative grow rounded-[30px] h-full w-[calc(100% - var(--spacing) * 4)] overflow-hidden m-4 group cursor-pointer'>
+        <Image
+          src={"/api/media/file/" + imageBack.filename as string}
+          alt={imageBack.alt}
+          width={imageBack.width as number}
+          height={imageBack.height as number}
+          objectPosition='center'
+          className='group-hover:scale-115 transition-all duration-300'
+        />
+        <div className='absolute top-0 left-0 w-full h-full flex justify-center items-center'>
+          <div className='opacity-0 bg-transparent rounded-[30px] w-full h-full border-[5px] border-(--color-cream) flex justify-center items-center transition-all duration-300 group-hover:w-[90%] group-hover:h-[90%] group-hover:rounded-[20px] group-hover:opacity-90 corner'>
+            <FontAwesomeIcon icon={faCircleHalfStroke} className=' text-[5vh] text-(--color-cream) -rotate-90 transition-all duration-300 group-hover:rotate-90 ' />
+          </div>
         </div>
+        
       </div>
-      <div className="footer">
-        <p>{ path.resolve(process.cwd(), process.env.PAYLOAD_UPLOAD_DIR!) }</p>
-        <p>Update this page by editing</p>
-        <a className="codeLink" href={fileURL}>
-          <code>app/(frontend)/page.tsx</code>
-        </a>
-      </div>
-    </div>
   )
 }
