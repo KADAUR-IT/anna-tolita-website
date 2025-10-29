@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { getPayload } from 'payload'
 import React from 'react'
 import { fileURLToPath } from 'url'
+import path from 'path'
 
 import config from '@/payload.config'
 import './styles.css'
@@ -49,6 +50,7 @@ export default async function HomePage() {
         </div>
       </div>
       <div className="footer">
+        <p>{ path.resolve(process.cwd(), process.env.PAYLOAD_UPLOAD_DIR) }</p>
         <p>Update this page by editing</p>
         <a className="codeLink" href={fileURL}>
           <code>app/(frontend)/page.tsx</code>
