@@ -9,6 +9,7 @@
 {
     --color-lila: #A37FA3;
     --color-green: #828F6A;
+    --color-dark-green: #5d6945;
     --color-cream: #F6F1E7;
     --color-dark-cream: #DCCBB3;
 }
@@ -16,17 +17,7 @@
 .navbar-icons
 {
     svg{
-        height: 50px;
         width: auto;
-    }
-
-    a{
-        width: 90px;
-        height: 90px;
-        border-radius: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 
     .link-active
@@ -47,4 +38,20 @@
     conic-gradient(at var(--s) var(--s),#0000 75%,#000 0)
     0 0/calc(100% - var(--s)) calc(100% - var(--s)),
     linear-gradient(#000 0 0) content-box;
+}
+
+
+
+@utility no-scrollbar
+{
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    & {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
 }

@@ -4,8 +4,8 @@ import './styles.css'
 import Navbar from '@/components/constants/Navbar'
 
 export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+  description: "Bienvenue sur le site d'Anna Tolila",
+  title: 'ANNA TOLILA - Photographe',
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
@@ -16,7 +16,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
       <body>
         <div className='flex flex-col max-h-screen min-h-0 h-screen'>
         <div className='flex justify-center mt-4 text-(--color-lila)'>
-          <h1 className='font-[Rockwell_Condensed] text-center text-[48px] w-[250px] leading-[40px]'>ANNA TOLILA</h1>
+          <h1 className='font-[Rockwell_Condensed] text-center text-[48px] w-[250px] leading-[40px] mb-2'>ANNA TOLILA</h1>
         </div>
         <Navbar />
         {children}

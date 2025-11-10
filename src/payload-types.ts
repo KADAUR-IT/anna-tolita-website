@@ -69,6 +69,9 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    cv: Cv;
+    expositions: Exposition;
+    projets: Projet;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -77,6 +80,9 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    cv: CvSelect<false> | CvSelect<true>;
+    expositions: ExpositionsSelect<false> | ExpositionsSelect<true>;
+    projets: ProjetsSelect<false> | ProjetsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -144,6 +150,8 @@ export interface User {
 export interface Media {
   id: string;
   alt: string;
+  exposition?: (string | null) | Exposition;
+  projet?: (string | null) | Projet;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -155,6 +163,100 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expositions".
+ */
+export interface Exposition {
+  id: string;
+  name?: string | null;
+  start?: string | null;
+  end?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projets".
+ */
+export interface Projet {
+  id: string;
+  name?: string | null;
+  start?: string | null;
+  end?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cv".
+ */
+export interface Cv {
+  id: string;
+  perso: {
+    firstname: string;
+    lastname: string;
+    job?: string | null;
+    description?: string | null;
+    mail?: string | null;
+    phoneNumber?: string | null;
+  };
+  formations?: {
+    formations?:
+      | {
+          title?: string | null;
+          organisme?: string | null;
+          location?: string | null;
+          start?: string | null;
+          end?: string | null;
+          description?:
+            | {
+                label?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  expositions?: {
+    expositions?:
+      | {
+          title?: string | null;
+          expositionName?: string | null;
+          location?: string | null;
+          start?: string | null;
+          end?: string | null;
+          description?:
+            | {
+                label?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  artisticActivity?: {
+    artisticActivity?:
+      | {
+          title?: string | null;
+          location?: string | null;
+          start?: string | null;
+          end?: string | null;
+          description?:
+            | {
+                label?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -170,6 +272,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'cv';
+        value: string | Cv;
+      } | null)
+    | ({
+        relationTo: 'expositions';
+        value: string | Exposition;
+      } | null)
+    | ({
+        relationTo: 'projets';
+        value: string | Projet;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -241,6 +355,8 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  exposition?: T;
+  projet?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -252,6 +368,105 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cv_select".
+ */
+export interface CvSelect<T extends boolean = true> {
+  perso?:
+    | T
+    | {
+        firstname?: T;
+        lastname?: T;
+        job?: T;
+        description?: T;
+        mail?: T;
+        phoneNumber?: T;
+      };
+  formations?:
+    | T
+    | {
+        formations?:
+          | T
+          | {
+              title?: T;
+              organisme?: T;
+              location?: T;
+              start?: T;
+              end?: T;
+              description?:
+                | T
+                | {
+                    label?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
+  expositions?:
+    | T
+    | {
+        expositions?:
+          | T
+          | {
+              title?: T;
+              expositionName?: T;
+              location?: T;
+              start?: T;
+              end?: T;
+              description?:
+                | T
+                | {
+                    label?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
+  artisticActivity?:
+    | T
+    | {
+        artisticActivity?:
+          | T
+          | {
+              title?: T;
+              location?: T;
+              start?: T;
+              end?: T;
+              description?:
+                | T
+                | {
+                    label?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "expositions_select".
+ */
+export interface ExpositionsSelect<T extends boolean = true> {
+  name?: T;
+  start?: T;
+  end?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projets_select".
+ */
+export interface ProjetsSelect<T extends boolean = true> {
+  name?: T;
+  start?: T;
+  end?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
