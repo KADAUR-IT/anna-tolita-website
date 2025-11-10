@@ -24,6 +24,6 @@ export default function NavbarLink({icon, href, isActive}: NavbarLinkProps)
     
 
     return(
-        <a className={isLinkActive ? "link-active" : ""} href={href}><FontAwesomeIcon icon={icon} /></a>
+        <a className={(isLinkActive ? "link-active " : "") + "[&>svg]:h-[30px]! w-[60px] h-[60px] md:[&>svg]:h-[50px]! md:w-[90px] md:h-[90px] rounded-[15px] flex items-center justify-center hover:bg-(--color-dark-cream) hover:text-(--color-green)"} href={href}><FontAwesomeIcon icon={icon} /></a>
     )
 }

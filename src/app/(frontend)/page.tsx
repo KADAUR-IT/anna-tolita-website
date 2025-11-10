@@ -23,7 +23,7 @@ export default async function HomePage() {
   const imageBack = docs[0] as Media
 
   return (
-      <div className='relative grow rounded-[30px] h-full w-[calc(100% - var(--spacing) * 4)] overflow-hidden m-4 group cursor-pointer'>
+      <a className='relative grow rounded-[30px] h-full w-[calc(100% - var(--spacing) * 4)] overflow-hidden m-4 group cursor-pointer' href='/galerie'>
         <Image
           src={"/api/media/file/" + imageBack.filename as string}
           alt={imageBack.alt}
@@ -38,6 +38,6 @@ export default async function HomePage() {
           </div>
         </div>
         
-      </div>
+      </a>
   )
 }
