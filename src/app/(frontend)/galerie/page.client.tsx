@@ -2,7 +2,7 @@
 
 import { Exposition, Media, Projet } from "@/payload-types";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useWindowDimensions from "utils/useWindowDimensions";
 import FilterSection from "./_components/FilterSection";
 import MobileFilterSection from "./_components/MobileFilterSection";
@@ -21,7 +21,14 @@ export default function GalerieClientPage({media, exposition, projet}: GalerieCl
         ["projet", [] as string[]],
         ["expo", [] as string[]],
     ]))
-    const { height, width } = useWindowDimensions();
+    const [width, setWidth] = useState(0);
+
+    useEffect( () => {
+        if(typeof window !== "undefined")
+        {
+            setWidth(window.innerWidth)
+        }
+    } )
 
     const allMedia = () => {
         setMediaFiltered(media)
