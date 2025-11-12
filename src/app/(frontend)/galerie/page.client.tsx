@@ -3,7 +3,6 @@
 import { Exposition, Media, Projet } from "@/payload-types";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import useWindowDimensions from "utils/useWindowDimensions";
 import FilterSection from "./_components/FilterSection";
 import MobileFilterSection from "./_components/MobileFilterSection";
 
@@ -22,6 +21,7 @@ export default function GalerieClientPage({media, exposition, projet}: GalerieCl
         ["expo", [] as string[]],
     ]))
     const [width, setWidth] = useState(0);
+    const [urlImage, setUrlImage] = useState<Media | null>(null)
 
     useEffect( () => {
         if(typeof window !== "undefined")
@@ -68,13 +68,26 @@ export default function GalerieClientPage({media, exposition, projet}: GalerieCl
         {class: "min-h-[200px] max-h-[200px]", label: "normal", order: [1,2,5,6,9,10,12,13], maxHeight: 200},
     ]
 
+    const handleOpenImage = (image: Media | null = null) => {
+        const el = document.getElementById("image-handler")
+
+        if(el)
+        {
+            el.classList.toggle("hidden")
+            if(image)
+            {
+                setUrlImage(image)
+            }
+        }
+    }
+
     const gridRender = mediaFiltered.map( (media, index) => 
         {
             const specialGrid = classGrid.filter( (c) => c.order.includes(index % 14) )
             const specialClass = specialGrid.length ? specialGrid[0].class : ""
 
             return(
-                <div key={"img-" + index} className={"bg-(--color-dark-cream) rounded-[15px] flex items-center justify-center overflow-hidden group " + specialClass}>
+                <div key={"img-" + index} onClick={() => {handleOpenImage(media)}} className={"bg-(--color-dark-cream) rounded-[15px] flex items-center justify-center overflow-hidden group " + specialClass}>
                     <Image
                         src={media.url as string}
                         alt={media.alt}
@@ -85,6 +98,7 @@ export default function GalerieClientPage({media, exposition, projet}: GalerieCl
                 </div>
             )
         } )
+    
 
     return(
         <>
@@ -99,6 +113,17 @@ export default function GalerieClientPage({media, exposition, projet}: GalerieCl
                     : "Aucune photo"
                 }
             </div>
+            <div id="image-handler" className="fixed bg-[#00000080] top-0 left-0 w-full h-full flex items-center justify-center hidden" onClick={() => handleOpenImage()}>
+                <Image 
+                    src={urlImage? urlImage.url as string : "/api/media/file/railay.png"}
+                    alt={urlImage? urlImage.alt as string : "temp"}
+                    height={urlImage? urlImage.height as number : 4169}
+                    width={urlImage? urlImage.width as number : 3135}
+                    className="max-w-[calc(100dvw-4em)] h-auto md:max-h-[calc(100dvh-8em)] md:w-auto"
+                    onClick={(e) => {e.stopPropagation()}}
+                />
+            </div>
+            
         </>
     )
 

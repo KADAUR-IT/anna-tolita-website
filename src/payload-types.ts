@@ -197,6 +197,7 @@ export interface Cv {
   perso: {
     firstname: string;
     lastname: string;
+    photo: string | Media;
     job?: string | null;
     description?: string | null;
     mail?: string | null;
@@ -379,6 +380,7 @@ export interface CvSelect<T extends boolean = true> {
     | {
         firstname?: T;
         lastname?: T;
+        photo?: T;
         job?: T;
         description?: T;
         mail?: T;

@@ -9,7 +9,6 @@ export default function Navbar() {
         {icon: faHome, href: "/"},
         {icon: faFile, href: "/cv"},
         {icon: faImages, href: "/galerie"},
-        {icon: faIcons, href: "/expo"},
         {icon: faNewspaper, href: "/news"},
         {icon: faPhone, href: "/contact"},
     ]
