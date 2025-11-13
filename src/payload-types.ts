@@ -72,6 +72,9 @@ export interface Config {
     cv: Cv;
     expositions: Exposition;
     projets: Projet;
+    news: News;
+    magazine: Magazine;
+    photos: Photo;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -83,6 +86,9 @@ export interface Config {
     cv: CvSelect<false> | CvSelect<true>;
     expositions: ExpositionsSelect<false> | ExpositionsSelect<true>;
     projets: ProjetsSelect<false> | ProjetsSelect<true>;
+    news: NewsSelect<false> | NewsSelect<true>;
+    magazine: MagazineSelect<false> | MagazineSelect<true>;
+    photos: PhotosSelect<false> | PhotosSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -261,6 +267,43 @@ export interface Cv {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news".
+ */
+export interface News {
+  id: string;
+  thumbnail?: (string | null) | Media;
+  title?: string | null;
+  magazine?: (string | null) | Magazine;
+  publishedDate?: string | null;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "magazine".
+ */
+export interface Magazine {
+  id: string;
+  name?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photos".
+ */
+export interface Photo {
+  id: string;
+  file: string | Media;
+  alt: string;
+  exposition?: (string | null) | Exposition;
+  projet?: (string | null) | Projet;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -285,6 +328,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'projets';
         value: string | Projet;
+      } | null)
+    | ({
+        relationTo: 'news';
+        value: string | News;
+      } | null)
+    | ({
+        relationTo: 'magazine';
+        value: string | Magazine;
+      } | null)
+    | ({
+        relationTo: 'photos';
+        value: string | Photo;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -467,6 +522,40 @@ export interface ProjetsSelect<T extends boolean = true> {
   name?: T;
   start?: T;
   end?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news_select".
+ */
+export interface NewsSelect<T extends boolean = true> {
+  thumbnail?: T;
+  title?: T;
+  magazine?: T;
+  publishedDate?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "magazine_select".
+ */
+export interface MagazineSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photos_select".
+ */
+export interface PhotosSelect<T extends boolean = true> {
+  file?: T;
+  alt?: T;
+  exposition?: T;
+  projet?: T;
   updatedAt?: T;
   createdAt?: T;
 }

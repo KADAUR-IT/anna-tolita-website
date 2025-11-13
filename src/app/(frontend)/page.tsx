@@ -13,19 +13,23 @@ export default async function HomePage() {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
-  const docs = await payload.db.collections["media"].aggregate([{$sample: {size: 1}}]).exec()
+  const docs = await payload.db.collections["photos"].aggregate([{$sample: {size: 1}}]).exec()
 
   if(!docs.length)
   {
     return
   }
 
-  const imageBack = docs[0] as Media
+  const imageBack = await payload.findByID({
+    collection: "media",
+    id: docs[0].file
+  })
+  //const imageBack = docs[0].file as Media
 
   return (
       <a className='relative grow rounded-[30px] h-full w-[calc(100% - var(--spacing) * 4)] overflow-hidden m-4 group cursor-pointer' href='/galerie'>
         <Image
-          src={"/api/media/file/" + imageBack.filename as string}
+          src={imageBack.url as string}
           alt={imageBack.alt}
           width={imageBack.width as number}
           height={imageBack.height as number}

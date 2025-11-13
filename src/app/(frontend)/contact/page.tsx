@@ -7,6 +7,7 @@ import config from '@/payload.config'
 import Input from "@/components/inputs/Input";
 import TextArea from "@/components/inputs/TextArea";
 import { stringify } from "querystring";
+import FormContact from "./_components/FormContact";
 
 export default async function ContactPage()
 {
@@ -36,10 +37,10 @@ export default async function ContactPage()
     //Faire le Component Client Form
 
     return(
-        <section className="flex flex-col items-center p-8 w-full md:max-w-[980px] mx-auto">
+        <section className="flex flex-col items-center my-4 w-full md:max-w-[980px] mx-auto">
             <Section className="w-full p-8">
-                <h2 className="text-[48px] leading[48px]">Mes coordonnées</h2>
-                <div className="flex gap-8 text-[40px] leading[40px]">
+                <h2 className="text-[40px] leading[40px]">Mes coordonnées</h2>
+                <div className="flex gap-8 text-[32px] leading[32px]">
                     <div className="flex items-center gap-2">
                         <FontAwesomeIcon icon={faEnvelope} />
                         <p>{cv.perso.mail}</p>
@@ -50,17 +51,7 @@ export default async function ContactPage()
                     </div>
                 </div>
             </Section>
-            <form className="flex flex-col gap-4 w-full">
-                <div className="flex gap-4 w-full">
-                    <Input label="Nom" name="lastname" />
-                    <Input label="Prénom" name="firstname" />
-                </div>
-
-                <Input label="E-mail" name="mail" />
-                <Input label="Sujet" name="sujet" />
-                <TextArea label="Message" name="message" />
-                <button role="submit" className="bg-(--color-lila) rounded w-full p-2 font-bold">Envoyer le message <FontAwesomeIcon icon={faPaperPlane} /></button>
-            </form>
+            <FormContact />
         </section>
     )
     

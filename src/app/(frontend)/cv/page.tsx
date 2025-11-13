@@ -5,22 +5,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { Media } from "@/payload-types";
+import { convertDate } from "@/utils/dateUtils";
 
-
-const convertDate = (date : string | null | undefined) : string =>
-{
-    if(!date) return ""
-
-    const options : Intl.DateTimeFormatOptions = {year : "numeric"}
-    const dateObject = new Date(date);
-    const dateFormatted = dateObject.toLocaleDateString("fr-FR", options);
-
-    return dateFormatted
-}
 
 const formateDate = (start : string | null | undefined, end : string | null | undefined) : string => {
-    const dateStart = convertDate(start)
-    const dateEnd = convertDate(end)
+    const options : Intl.DateTimeFormatOptions = {year : "numeric"}
+    const dateStart = convertDate(start, options)
+    const dateEnd = convertDate(end, options)
 
     let dateString = `${dateStart} à ${dateEnd}`
     if(dateStart == dateEnd )
@@ -139,7 +130,7 @@ export default async function CVPage()
                             <p>{cv.perso.phoneNumber}</p>
                         </div>
                     </div>
-                    <a href="/contact" className=" text-black px-8 py-4 bg-(--color-dark-cream) rounded-[15px]">Me contacter</a>
+                    <a href="/contact" className=" text-black px-8 py-4 hover:bg-(--color-dark-cream) bg-(--color-cream) transition-all duration-300 rounded-[15px]">Me contacter</a>
                 </div>
 
             </div>

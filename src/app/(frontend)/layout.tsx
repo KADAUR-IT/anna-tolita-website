@@ -2,6 +2,7 @@ import React from 'react'
 import "@/styles/globals.css"
 import './styles.css'
 import Navbar from '@/components/constants/Navbar'
+import Footer from '@/components/constants/Footer'
 
 export const metadata = {
   description: "Bienvenue sur le site d'Anna Tolila",
@@ -20,7 +21,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
         </div>
         <Navbar />
         {children}
-        <p>Footer</p>
+        <Footer />
         </div>
       </body>
     </html>
