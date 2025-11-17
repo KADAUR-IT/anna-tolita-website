@@ -8,7 +8,7 @@ export default async function GaleriePage() {
     const payload = await getPayload({ config: payloadConfig })
 
     const resMedia = await payload.find({
-        collection: "media"
+        collection: "photos"
     })
 
     const resExposition = await payload.find({

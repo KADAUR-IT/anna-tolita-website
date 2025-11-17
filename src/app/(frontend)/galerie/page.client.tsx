@@ -1,20 +1,23 @@
 "use client"
 
-import { Exposition, Media, Projet } from "@/payload-types";
+import { Exposition, Media, Photo, Projet } from "@/payload-types";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import useWindowDimensions from "utils/useWindowDimensions";
 import FilterSection from "./_components/FilterSection";
 import MobileFilterSection from "./_components/MobileFilterSection";
 
 interface GalerieClientPageProps {
-    media: Media[]
+    media: Photo[]
     exposition: Exposition[],
     projet: Projet[]
 }
 
 export default function GalerieClientPage({media, exposition, projet}: GalerieClientPageProps)
 {
+    const itemsFilter = [
+        {name: "Projet", type: "projet", items: projet},
+        {name: "Exposition", type: "expo", items: exposition},
+    ]
     const [mediaFiltered, setMediaFiltered] = useState(media)
     const [countFilter, setCountFilter] = useState(0)
     const [mapFilter, setFilter] = useState(new Map([
@@ -22,6 +25,7 @@ export default function GalerieClientPage({media, exposition, projet}: GalerieCl
         ["expo", [] as string[]],
     ]))
     const [width, setWidth] = useState(0);
+    const [urlImage, setUrlImage] = useState<Media | null>(null)
 
     useEffect( () => {
         if(typeof window !== "undefined")
@@ -68,29 +72,44 @@ export default function GalerieClientPage({media, exposition, projet}: GalerieCl
         {class: "min-h-[200px] max-h-[200px]", label: "normal", order: [1,2,5,6,9,10,12,13], maxHeight: 200},
     ]
 
-    const gridRender = mediaFiltered.map( (media, index) => 
-        {
-            const specialGrid = classGrid.filter( (c) => c.order.includes(index % 14) )
-            const specialClass = specialGrid.length ? specialGrid[0].class : ""
+    const handleOpenImage = (image: Media | null = null) => {
+        const el = document.getElementById("image-handler")
 
-            return(
-                <div key={"img-" + index} className={"bg-(--color-dark-cream) rounded-[15px] flex items-center justify-center overflow-hidden group " + specialClass}>
-                    <Image
-                        src={media.url as string}
-                        alt={media.alt}
-                        width={media.width as number}
-                        height={media.height as number}
-                        className={`object-cover w-full h-full group-hover:scale-115 transition-all duration-300 cursor-pointer`}
-                    />
-                </div>
-            )
-        } )
+        if(el)
+        {
+            el.classList.toggle("hidden")
+            if(image)
+            {
+                setUrlImage(image)
+            }
+        }
+    }
+
+    const gridRender = mediaFiltered.map( (photo, index) => 
+    {
+        const media: Media = photo.file as Media
+        const specialGrid = classGrid.filter( (c) => c.order.includes(index % 14) )
+        const specialClass = specialGrid.length ? specialGrid[0].class : ""
+
+        return(
+            <div key={"img-" + index} onClick={() => {handleOpenImage(media)}} className={"bg-(--color-dark-cream) rounded-[15px] flex items-center justify-center overflow-hidden group " + specialClass}>
+                <Image
+                    src={media.url as string}
+                    alt={media.alt}
+                    width={media.width as number}
+                    height={media.height as number}
+                    className={`object-cover w-full h-full group-hover:scale-115 transition-all duration-300 cursor-pointer`}
+                />
+            </div>
+        )
+    } )
+    
 
     return(
         <>
             { width < 448 ?
-                <MobileFilterSection countFilter={countFilter} handleFilter={handleFilter} projet={projet} exposition={exposition} allMedia={allMedia} /> 
-                : <FilterSection countFilter={countFilter} handleFilter={handleFilter} projet={projet} exposition={exposition} allMedia={allMedia} /> 
+                <MobileFilterSection countFilter={countFilter} handleFilter={handleFilter} filters={itemsFilter} allItems={allMedia} /> 
+                : <FilterSection countFilter={countFilter} handleFilter={handleFilter} filters={itemsFilter} allItems={allMedia} /> 
             }
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-[30px] w-full">
                 {
@@ -99,6 +118,17 @@ export default function GalerieClientPage({media, exposition, projet}: GalerieCl
                     : "Aucune photo"
                 }
             </div>
+            <div id="image-handler" className="fixed bg-[#00000080] top-0 left-0 w-full h-full flex items-center justify-center hidden" onClick={() => handleOpenImage()}>
+                <Image 
+                    src={urlImage? urlImage.url as string : "/api/media/file/railay.png"}
+                    alt={urlImage? urlImage.alt as string : "temp"}
+                    height={urlImage? urlImage.height as number : 4169}
+                    width={urlImage? urlImage.width as number : 3135}
+                    className="max-w-[calc(100dvw-4em)] h-auto md:max-h-[calc(100dvh-8em)] md:w-auto"
+                    onClick={(e) => {e.stopPropagation()}}
+                />
+            </div>
+            
         </>
     )
 

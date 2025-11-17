@@ -2,6 +2,7 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { nodemailerAdapter } from '@payloadcms/email-nodemailer'
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob"
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -13,6 +14,9 @@ import { Media } from './collections/Media'
 import { CV } from './collections/CV'
 import { Expositions } from './collections/Expositions'
 import { Projets } from './collections/Projets'
+import { News } from './collections/News'
+import { Magazine } from './collections/Magazine'
+import { Photos } from './collections/Photos'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -24,7 +28,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, CV, Expositions, Projets],
+  collections: [Users, Media, CV, Expositions, Projets, News, Magazine, Photos],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -45,4 +49,16 @@ export default buildConfig({
     }),
     // storage-adapter-placeholder
   ],
+  email: nodemailerAdapter({
+    defaultFromAddress: "hello@kadaur.com",
+    defaultFromName: "KADAUR",
+    transportOptions: {
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      }
+    }
+  }),
 })

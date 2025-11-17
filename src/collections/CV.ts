@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { relationship } from 'payload/shared'
 
 export const CV: CollectionConfig = {
   slug: 'cv',
@@ -26,6 +27,12 @@ export const CV: CollectionConfig = {
                             required: true
                         }
                     ]
+                },
+                {
+                    type: "upload",
+                    relationTo: "media",
+                    name: "photo",
+                    required: true
                 },
                 {
                     type: "text",

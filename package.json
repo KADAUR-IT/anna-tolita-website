@@ -24,6 +24,7 @@
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
     "@fortawesome/react-fontawesome": "^3.1.0",
     "@payloadcms/db-mongodb": "3.61.1",
+    "@payloadcms/email-nodemailer": "^3.61.1",
     "@payloadcms/next": "3.61.1",
     "@payloadcms/payload-cloud": "3.61.1",
     "@payloadcms/richtext-lexical": "3.61.1",
@@ -38,6 +39,7 @@
     "postcss": "^8.5.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-google-recaptcha": "^3.1.0",
     "sharp": "0.34.2",
     "tailwindcss": "^4.1.16"
   },
@@ -47,6 +49,7 @@
     "@types/node": "^22.5.4",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
+    "@types/react-google-recaptcha": "^2.1.9",
     "@vitejs/plugin-react": "4.5.2",
     "eslint": "^9.16.0",
     "eslint-config-next": "15.4.4",

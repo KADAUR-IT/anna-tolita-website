@@ -9,12 +9,18 @@ import { faFilter } from "@fortawesome/free-solid-svg-icons"
 interface MobileFilterSectionProps {
     countFilter: number,
     handleFilter: (idFilter: string, typeFilter: string, isAdded: boolean) => void,
-    allMedia: () => void
-    projet: Projet[],
-    exposition: Exposition[]
+    allItems: () => void
+    filters: Filters[]
 }
 
-export default function MobileFilterSection({countFilter, handleFilter, allMedia, projet, exposition} : MobileFilterSectionProps)
+interface Filters
+{
+    name: string,
+    type: string,
+    items: any[]
+}
+
+export default function MobileFilterSection({countFilter, handleFilter, allItems, filters} : MobileFilterSectionProps)
 {
     const toggleFilter = (id: string, filter: string) => {
         const el = document.getElementById("filter-" + filter + "-" +  id);
@@ -32,7 +38,7 @@ export default function MobileFilterSection({countFilter, handleFilter, allMedia
     }
 
     const handleResetFilter = () => {
-        allMedia();
+        allItems();
         const els = document.getElementsByClassName("filters-btn")
         Array.prototype.forEach.call(
             els,
@@ -54,6 +60,21 @@ export default function MobileFilterSection({countFilter, handleFilter, allMedia
         }
     }
 
+    const filtersRender = filters.map( (filter) => {
+        return(
+            <>
+                <h3>{filter.name}</h3>
+                <div id={filter.type} className="text-[16px] leading-[30px] flex flex-row flex-wrap gap-1 transition-all duration-300 w-full filters">
+                    {filter.items.map( (item) => {
+                        return(
+                            <button id={"filter-" + filter.type + "-" + item.id} key={item.id} onClick={() => toggleFilter(item.id.toString(), filter.type)} className="px-2 rounded text-center min-w-max border-[1px] border-(--color-green) hover:bg-(--color-dark-cream) cursor-pointer filters-btn">{item.name}</button>
+                        )
+                    } )}
+                </div>
+            </>
+        )
+    } )
+
     return(
         <>
             <button onClick={() => handleOpenFilter()} className="fixed bottom-4 left-4 bg-(--color-green) w-max py-2 px-3 [&>svg]:h-[24px]! rounded">
@@ -63,22 +84,7 @@ export default function MobileFilterSection({countFilter, handleFilter, allMedia
                 <div className="flex flex-col grow-1 gap-3 items-start p-2">
                     <h2 className="text-center text-[30px] w-full mb-4">Filtres</h2>
                     <button onClick={handleResetFilter} className={ (!countFilter ? "text-(--color-green) " : "" ) + "cursor-pointer"}>Tout</button>
-                    <h3>Projet</h3>
-                    <div id="projet" className="text-[16px] leading-[30px] flex flex-row flex-wrap gap-1 transition-all duration-300 w-full filters">
-                        {projet.map( (p) => {
-                            return(
-                                <button id={"filter-projet-" + p.id} key={p.id} onClick={() => toggleFilter(p.id.toString(), "projet")} className="px-2 rounded text-center min-w-max border-[1px] border-(--color-green) hover:bg-(--color-dark-cream) cursor-pointer filters-btn">{p.name}</button>
-                            )
-                        } )}
-                    </div>
-                    <h3>Projet</h3>
-                    <div id="expo" className="text-[16px] leading-[30px] flex flex-row gap-1 transition-all duration-300 w-full overflow-hidden filters">
-                        {exposition.map( (e) => {
-                            return(
-                                <button id={"filter-expo-" + e.id} key={e.id} onClick={() => toggleFilter(e.id.toString(), "expo")} className="px-2 rounded text-center min-w-max border-[1px] border-(--color-green) hover:bg-(--color-dark-cream) cursor-pointer filters-btn">{e.name}</button>
-                            )
-                        } )}
-                    </div>
+                    {filtersRender}
                 </div>
                 <div className="w-full p-2 flex gap-2">
                     <button onClick={() => handleResetFilter()} className="bg-(--color-dark-cream) text-(--color-green) rounded cursor-pointer leading-[40px] w-full">Reinitialiser</button>
