@@ -69,7 +69,6 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
-    cv: Cv;
     expositions: Exposition;
     projets: Projet;
     news: News;
@@ -83,7 +82,6 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    cv: CvSelect<false> | CvSelect<true>;
     expositions: ExpositionsSelect<false> | ExpositionsSelect<true>;
     projets: ProjetsSelect<false> | ProjetsSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
@@ -96,8 +94,12 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    cv: Cv;
+  };
+  globalsSelect: {
+    cv: CvSelect<false> | CvSelect<true>;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -196,77 +198,6 @@ export interface Projet {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "cv".
- */
-export interface Cv {
-  id: string;
-  perso: {
-    firstname: string;
-    lastname: string;
-    photo: string | Media;
-    job?: string | null;
-    description?: string | null;
-    mail?: string | null;
-    phoneNumber?: string | null;
-  };
-  formations?: {
-    formations?:
-      | {
-          title?: string | null;
-          organisme?: string | null;
-          location?: string | null;
-          start?: string | null;
-          end?: string | null;
-          description?:
-            | {
-                label?: string | null;
-                id?: string | null;
-              }[]
-            | null;
-          id?: string | null;
-        }[]
-      | null;
-  };
-  expositions?: {
-    expositions?:
-      | {
-          title?: string | null;
-          expositionName?: string | null;
-          location?: string | null;
-          start?: string | null;
-          end?: string | null;
-          description?:
-            | {
-                label?: string | null;
-                id?: string | null;
-              }[]
-            | null;
-          id?: string | null;
-        }[]
-      | null;
-  };
-  artisticActivity?: {
-    artisticActivity?:
-      | {
-          title?: string | null;
-          location?: string | null;
-          start?: string | null;
-          end?: string | null;
-          description?:
-            | {
-                label?: string | null;
-                id?: string | null;
-              }[]
-            | null;
-          id?: string | null;
-        }[]
-      | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "news".
  */
 export interface News {
@@ -316,10 +247,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
-      } | null)
-    | ({
-        relationTo: 'cv';
-        value: string | Cv;
       } | null)
     | ({
         relationTo: 'expositions';
@@ -427,84 +354,6 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "cv_select".
- */
-export interface CvSelect<T extends boolean = true> {
-  perso?:
-    | T
-    | {
-        firstname?: T;
-        lastname?: T;
-        photo?: T;
-        job?: T;
-        description?: T;
-        mail?: T;
-        phoneNumber?: T;
-      };
-  formations?:
-    | T
-    | {
-        formations?:
-          | T
-          | {
-              title?: T;
-              organisme?: T;
-              location?: T;
-              start?: T;
-              end?: T;
-              description?:
-                | T
-                | {
-                    label?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
-      };
-  expositions?:
-    | T
-    | {
-        expositions?:
-          | T
-          | {
-              title?: T;
-              expositionName?: T;
-              location?: T;
-              start?: T;
-              end?: T;
-              description?:
-                | T
-                | {
-                    label?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
-      };
-  artisticActivity?:
-    | T
-    | {
-        artisticActivity?:
-          | T
-          | {
-              title?: T;
-              location?: T;
-              start?: T;
-              end?: T;
-              description?:
-                | T
-                | {
-                    label?: T;
-                    id?: T;
-                  };
-              id?: T;
-            };
-      };
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "expositions_select".
  */
 export interface ExpositionsSelect<T extends boolean = true> {
@@ -590,6 +439,156 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cv".
+ */
+export interface Cv {
+  id: string;
+  perso: {
+    firstname: string;
+    lastname: string;
+    photo: string | Media;
+    job?: string | null;
+    description?: string | null;
+    mail?: string | null;
+    phoneNumber?: string | null;
+  };
+  formations?: {
+    formations?:
+      | {
+          title?: string | null;
+          organisme?: string | null;
+          location?: string | null;
+          start?: string | null;
+          end?: string | null;
+          description?:
+            | {
+                label?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  expositions?: {
+    expositions?:
+      | {
+          title?: string | null;
+          expositionName?: string | null;
+          location?: string | null;
+          start?: string | null;
+          end?: string | null;
+          description?:
+            | {
+                label?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  artisticActivity?: {
+    artisticActivity?:
+      | {
+          title?: string | null;
+          location?: string | null;
+          start?: string | null;
+          end?: string | null;
+          description?:
+            | {
+                label?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cv_select".
+ */
+export interface CvSelect<T extends boolean = true> {
+  perso?:
+    | T
+    | {
+        firstname?: T;
+        lastname?: T;
+        photo?: T;
+        job?: T;
+        description?: T;
+        mail?: T;
+        phoneNumber?: T;
+      };
+  formations?:
+    | T
+    | {
+        formations?:
+          | T
+          | {
+              title?: T;
+              organisme?: T;
+              location?: T;
+              start?: T;
+              end?: T;
+              description?:
+                | T
+                | {
+                    label?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
+  expositions?:
+    | T
+    | {
+        expositions?:
+          | T
+          | {
+              title?: T;
+              expositionName?: T;
+              location?: T;
+              start?: T;
+              end?: T;
+              description?:
+                | T
+                | {
+                    label?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
+  artisticActivity?:
+    | T
+    | {
+        artisticActivity?:
+          | T
+          | {
+              title?: T;
+              location?: T;
+              start?: T;
+              end?: T;
+              description?:
+                | T
+                | {
+                    label?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

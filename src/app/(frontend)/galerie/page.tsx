@@ -24,7 +24,7 @@ export default async function GaleriePage() {
     const exposition = resExposition.docs
 
     return(
-        <div className="flex flex-col md:flex-row m-4 md:m-8 gap-8">
+        <div className="flex flex-col md:flex-row m-4 md:m-8 gap-8 h-full">
             <GalerieClientPage media={media} projet={projet} exposition={exposition} />
         </div>
     )

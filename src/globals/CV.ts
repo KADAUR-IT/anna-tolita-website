@@ -1,7 +1,6 @@
-import type { CollectionConfig } from 'payload'
-import { relationship } from 'payload/shared'
+import type { GlobalConfig } from 'payload'
 
-export const CV: CollectionConfig = {
+export const CV: GlobalConfig = {
   slug: 'cv',
   access: {
     read: () => true,

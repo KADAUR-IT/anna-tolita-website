@@ -33,17 +33,10 @@ export default async function CVPage()
     const payloadConfig = await config
     const payload = await getPayload({ config: payloadConfig })
 
-    const docs = await payload.find({
-        collection: "cv",
-        limit: 1
+    const cv = await payload.findGlobal({
+        slug: "cv",
     })
 
-    if(!docs.totalDocs)
-    {
-        return
-    }
-
-    const cv = docs.docs[0]
     const pp : Media = cv.perso.photo as Media
 
     const formations = cv.formations?.formations || [];

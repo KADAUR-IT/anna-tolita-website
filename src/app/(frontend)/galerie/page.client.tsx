@@ -2,9 +2,13 @@
 
 import { Exposition, Media, Photo, Projet } from "@/payload-types";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FilterSection from "./_components/FilterSection";
 import MobileFilterSection from "./_components/MobileFilterSection";
+import NoContent from "@/components/NoContent";
+import { faImage } from "@fortawesome/free-solid-svg-icons";
+import Carousel from "./_components/Carousel";
+import Test from "./_components/Test";
 
 interface GalerieClientPageProps {
     media: Photo[]
@@ -25,7 +29,8 @@ export default function GalerieClientPage({media, exposition, projet}: GalerieCl
         ["expo", [] as string[]],
     ]))
     const [width, setWidth] = useState(0);
-    const [urlImage, setUrlImage] = useState<Media | null>(null)
+    const [activeSlide, setActiveSlide] = useState(0)
+    const carouselRef = useRef<any>(null)
 
     useEffect( () => {
         if(typeof window !== "undefined")
@@ -53,8 +58,6 @@ export default function GalerieClientPage({media, exposition, projet}: GalerieCl
             mapFilter.get(typeFilter)!.splice(index, 1)
         }
 
-        //console.log(mapFilter)
-
         const temp2 = media.filter((m) => m.projet && mapFilter.get("projet")!.includes((m.projet as Projet).id))
         const temp = media.filter((m) => m.exposition && mapFilter.get("expo")!.includes((m.exposition as Exposition).id))
 
@@ -72,32 +75,49 @@ export default function GalerieClientPage({media, exposition, projet}: GalerieCl
         {class: "min-h-[200px] max-h-[200px]", label: "normal", order: [1,2,5,6,9,10,12,13], maxHeight: 200},
     ]
 
-    const handleOpenImage = (image: Media | null = null) => {
+    const handleOpenImage = (image: number = -1) => {
         const el = document.getElementById("image-handler")
 
-        if(el)
-        {
-            el.classList.toggle("hidden")
-            if(image)
-            {
-                setUrlImage(image)
+        if(!el) return;
+
+        const wasHidden = el.classList.contains("hidden");
+
+        if(wasHidden) {
+            // Show modal first so Flickity can measure layout
+            el.classList.remove("hidden");
+
+            if(image >= 0) {
+                setActiveSlide(image)
             }
+
+            // Give browser a moment to render, then resize/select Flickity
+            setTimeout(() => {
+                try {
+                    carouselRef.current?.resize?.();
+                    if(image >= 0) {
+                        carouselRef.current?.select?.(image, false, true);
+                    }
+                } catch (e) { /* ignore */ }
+            }, 50);
+        } else {
+            // hide modal
+            el.classList.add("hidden");
         }
     }
 
     const gridRender = mediaFiltered.map( (photo, index) => 
     {
-        const media: Media = photo.file as Media
+        const mediaPhoto = photo.file as Media
         const specialGrid = classGrid.filter( (c) => c.order.includes(index % 14) )
         const specialClass = specialGrid.length ? specialGrid[0].class : ""
 
         return(
-            <div key={"img-" + index} onClick={() => {handleOpenImage(media)}} className={"bg-(--color-dark-cream) rounded-[15px] flex items-center justify-center overflow-hidden group " + specialClass}>
+            <div key={"img-" + index} onClick={() => {handleOpenImage(media.indexOf(photo))}} className={"bg-(--color-dark-cream) rounded-[15px] flex items-center justify-center overflow-hidden group " + specialClass}>
                 <Image
-                    src={media.url as string}
-                    alt={media.alt}
-                    width={media.width as number}
-                    height={media.height as number}
+                    src={mediaPhoto.url as string}
+                    alt={mediaPhoto.alt}
+                    width={mediaPhoto.width as number}
+                    height={mediaPhoto.height as number}
                     className={`object-cover w-full h-full group-hover:scale-115 transition-all duration-300 cursor-pointer`}
                 />
             </div>
@@ -111,23 +131,17 @@ export default function GalerieClientPage({media, exposition, projet}: GalerieCl
                 <MobileFilterSection countFilter={countFilter} handleFilter={handleFilter} filters={itemsFilter} allItems={allMedia} /> 
                 : <FilterSection countFilter={countFilter} handleFilter={handleFilter} filters={itemsFilter} allItems={allMedia} /> 
             }
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-[30px] w-full">
-                {
-                    gridRender.length ? 
-                    gridRender
-                    : "Aucune photo"
-                }
-            </div>
-            <div id="image-handler" className="fixed bg-[#00000080] top-0 left-0 w-full h-full flex items-center justify-center hidden" onClick={() => handleOpenImage()}>
-                <Image 
-                    src={urlImage? urlImage.url as string : "/api/media/file/railay.png"}
-                    alt={urlImage? urlImage.alt as string : "temp"}
-                    height={urlImage? urlImage.height as number : 4169}
-                    width={urlImage? urlImage.width as number : 3135}
-                    className="max-w-[calc(100dvw-4em)] h-auto md:max-h-[calc(100dvh-8em)] md:w-auto"
-                    onClick={(e) => {e.stopPropagation()}}
-                />
-            </div>
+            
+            {
+                gridRender.length ? 
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-[30px] w-full">
+                    {gridRender}
+                </div>
+                : <NoContent text="Aucune photo" icon={faImage} />
+            }
+            
+            
+            <Carousel carouselRef={carouselRef} photos={media.map( (media) => media.file as Media )} activeSlide={activeSlide} handleOpenImage={handleOpenImage} />
             
         </>
     )
