@@ -6,6 +6,8 @@ import MobileFilterSection from "../galerie/_components/MobileFilterSection";
 import FilterSection from "../galerie/_components/FilterSection";
 import { convertDate } from "@/utils/dateUtils";
 import Image from "next/image";
+import NoContent from "@/components/NoContent";
+import { faNewspaper } from "@fortawesome/free-solid-svg-icons";
 
 interface NewsClientPageProps
 {
@@ -91,13 +93,13 @@ export default function NewsClientPage({news, magazine} : NewsClientPageProps)
                 <MobileFilterSection countFilter={countFilter} handleFilter={handleFilter} filters={itemsFilter} allItems={allNews} /> 
                 : <FilterSection countFilter={countFilter} handleFilter={handleFilter} filters={itemsFilter} allItems={allNews} /> 
             }
-            <div className="grid grid-cols-1 md:grid-cols-2 justify-center text-black gap-[30px] w-full">
-                {
-                    gridRender.length ? 
-                    gridRender
-                    : "Aucune news"
-                }
-            </div>
+            {
+                gridRender.length ? 
+                <div className="grid grid-cols-1 md:grid-cols-2 text-black gap-[30px] w-full">
+                    {gridRender}
+                </div>
+                : <NoContent text="Aucune news" icon={faNewspaper} />
+            }
         </>
     )
 }

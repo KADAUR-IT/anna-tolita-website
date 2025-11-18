@@ -14,27 +14,9 @@ export default async function ContactPage()
     const payloadConfig = await config
     const payload = await getPayload({ config: payloadConfig })
 
-    const docs = await payload.find({
-        collection: "cv",
-        limit: 1
+    const cv = await payload.findGlobal({
+        slug: "cv",
     })
-
-    if(!docs.totalDocs)
-    {
-        return
-    }
-
-    const cv = docs.docs[0]
-
-    const handleMail = async (stringContact : string) => 
-    {
-        const res = await fetch(`/api/sendMail?${stringContact}`);
-        const data = await res.json();
-
-        console.log(data)
-    }
-
-    //Faire le Component Client Form
 
     return(
         <section className="flex flex-col items-center my-4 w-full md:max-w-[980px] mx-auto">

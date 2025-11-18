@@ -1,4 +1,3 @@
-import path from 'path'
 import type { CollectionConfig } from 'payload'
 
 export const Photos: CollectionConfig = {
