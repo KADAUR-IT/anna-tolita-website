@@ -19,6 +19,7 @@ import { Magazine } from './collections/Magazine'
 import { Photos } from './collections/Photos'
 import { Logo } from './components/constants/Logo'
 import { Icon } from './components/constants/Icon'
+import { Settings } from './globals/Settings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -48,7 +49,7 @@ export default buildConfig({
     }
   },
   collections: [Users, Media, Expositions, Projets, News, Magazine, Photos],
-  globals: [CV],
+  globals: [CV, Settings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

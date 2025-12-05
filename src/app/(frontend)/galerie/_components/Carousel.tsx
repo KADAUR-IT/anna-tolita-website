@@ -2,9 +2,8 @@
 
 import { Media } from "@/payload-types";
 import Image from "next/image";
-import React, { useState, useEffect, useRef, use } from "react";
+import React, { useState, useEffect } from "react";
 import "flickity/css/flickity.css";
-import { cp } from "fs";
 
 interface CarouselProps
 {
@@ -36,6 +35,8 @@ export default function Carousel({carouselRef, photos, activeSlide, handleOpenIm
           adaptiveHeight: true,
           initialIndex: activeSlide
       })
+
+      carouselRef.current?.resize?.();
 
       document.querySelectorAll(".flickity-button").forEach( (button) => {
           button.addEventListener("click", (e) => {
@@ -76,7 +77,7 @@ export default function Carousel({carouselRef, photos, activeSlide, handleOpenIm
 
     return(
       <div id="image-handler" className="fixed bg-[#00000080] top-0 left-0 w-full h-full hidden flex items-center justify-center" onClick={(e) => {handleOpenImage()}}>
-        <div className="carousel w-[90%] h-[50vh] md:h-[80vh] flex items-center justify-center" ref={carouselRef}>
+        <div className="carousel w-[90%] h-[50vh] md:h-[80vh] flex items-center justify-center z-10" ref={carouselRef}>
          {photosRender}
         </div>
       </div>
