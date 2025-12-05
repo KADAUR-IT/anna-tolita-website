@@ -1,12 +1,8 @@
 import Section from "@/components/Section";
-import { faEnvelope, faPaperPlane, faPhone } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useRef, useState } from "react";
 import { getPayload } from "payload";
 import config from '@/payload.config'
-import Input from "@/components/inputs/Input";
-import TextArea from "@/components/inputs/TextArea";
-import { stringify } from "querystring";
 import FormContact from "./_components/FormContact";
 
 export default async function ContactPage()

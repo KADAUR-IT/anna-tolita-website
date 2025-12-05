@@ -12,6 +12,16 @@ const nextConfig = {
 
     return webpackConfig
   },
+  images: {
+    dangerouslyAllowLocalIP: true,
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost"
+      }
+    ]
+  },
+  turbopack: {},
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })

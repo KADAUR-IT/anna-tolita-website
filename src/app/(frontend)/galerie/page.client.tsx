@@ -83,24 +83,22 @@ export default function GalerieClientPage({media, exposition, projet}: GalerieCl
         const wasHidden = el.classList.contains("hidden");
 
         if(wasHidden) {
-            // Show modal first so Flickity can measure layout
             el.classList.remove("hidden");
 
             if(image >= 0) {
                 setActiveSlide(image)
             }
 
-            // Give browser a moment to render, then resize/select Flickity
             setTimeout(() => {
                 try {
-                    carouselRef.current?.resize?.();
+                    
                     if(image >= 0) {
                         carouselRef.current?.select?.(image, false, true);
+                        carouselRef.current?.resize?.();
                     }
-                } catch (e) { /* ignore */ }
+                } catch (e) {  }
             }, 50);
         } else {
-            // hide modal
             el.classList.add("hidden");
         }
     }

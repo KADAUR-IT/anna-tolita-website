@@ -96,9 +96,11 @@ export interface Config {
   };
   globals: {
     cv: Cv;
+    settings: Setting;
   };
   globalsSelect: {
     cv: CvSelect<false> | CvSelect<true>;
+    settings: SettingsSelect<false> | SettingsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -158,8 +160,6 @@ export interface User {
 export interface Media {
   id: string;
   alt: string;
-  exposition?: (string | null) | Exposition;
-  projet?: (string | null) | Projet;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -338,8 +338,6 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
-  exposition?: T;
-  projet?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -513,6 +511,17 @@ export interface Cv {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings".
+ */
+export interface Setting {
+  id: string;
+  landingPageImage?: (string | null) | Media;
+  maintenanceMode?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "cv_select".
  */
 export interface CvSelect<T extends boolean = true> {
@@ -586,6 +595,17 @@ export interface CvSelect<T extends boolean = true> {
               id?: T;
             };
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings_select".
+ */
+export interface SettingsSelect<T extends boolean = true> {
+  landingPageImage?: T;
+  maintenanceMode?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

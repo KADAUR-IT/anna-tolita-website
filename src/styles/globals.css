@@ -15,6 +15,10 @@
     --color-dark-cream: #DCCBB3;
 }
 
+img{
+    pointer-events: none;
+}
+
 .navbar-icons
 {
     svg{
