@@ -6,6 +6,7 @@ import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { Media } from "@/payload-types";
 import { convertDate } from "@/utils/dateUtils";
+import { notFound } from "next/navigation";
 
 
 const formateDate = (start : string | null | undefined, end : string | null | undefined) : string => {
@@ -36,6 +37,8 @@ export default async function CVPage()
     const cv = await payload.findGlobal({
         slug: "cv",
     })
+
+    if(!cv) notFound();
 
     const pp : Media = cv.perso.photo as Media
 
