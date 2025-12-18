@@ -6,6 +6,7 @@ import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 import { Media } from "@/payload-types";
 import { convertDate } from "@/utils/dateUtils";
+import { notFound } from "next/navigation";
 
 
 const formateDate = (start : string | null | undefined, end : string | null | undefined) : string => {
@@ -36,6 +37,8 @@ export default async function CVPage()
     const cv = await payload.findGlobal({
         slug: "cv",
     })
+
+    if(!cv) notFound();
 
     const pp : Media = cv.perso.photo as Media
 
@@ -103,10 +106,10 @@ export default async function CVPage()
                 <h2 className="block md:hidden text-[40px] text-center text-black uppercase mb-4">{cv.perso.job}</h2>
                 <div className="aspect-square md:w-[600px] rounded-[30px] bg-(--color-green) overflow-hidden">
                     <Image
-                        src={pp.url as string}
+                        src={pp.url as string || ""}
                         alt={pp.alt as string}
-                        width={pp.width as number}
-                        height={pp.height as number}
+                        width={pp.width as number || 0}
+                        height={pp.height as number || 0}
                         className="w-full"
                     />
                 </div>
