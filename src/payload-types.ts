@@ -74,11 +74,19 @@ export interface Config {
     news: News;
     magazine: Magazine;
     photos: Photo;
+    'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    expositions: {
+      photos_expo: 'photos';
+    };
+    projets: {
+      photos_projet: 'photos';
+    };
+  };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -87,6 +95,7 @@ export interface Config {
     news: NewsSelect<false> | NewsSelect<true>;
     magazine: MagazineSelect<false> | MagazineSelect<true>;
     photos: PhotosSelect<false> | PhotosSelect<true>;
+    'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -94,6 +103,7 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
+  fallbackLocale: null;
   globals: {
     cv: Cv;
     settings: Setting;
@@ -179,8 +189,44 @@ export interface Media {
 export interface Exposition {
   id: string;
   name?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   start?: string | null;
   end?: string | null;
+  photos_expo?: {
+    docs?: (string | Photo)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photos".
+ */
+export interface Photo {
+  id: string;
+  _photos_photos_projet_order?: string | null;
+  _photos_photos_expo_order?: string | null;
+  file: string | Media;
+  title: string;
+  caption?: string | null;
+  exposition?: (string | null) | Exposition;
+  projet?: (string | null) | Projet;
   updatedAt: string;
   createdAt: string;
 }
@@ -191,8 +237,28 @@ export interface Exposition {
 export interface Projet {
   id: string;
   name?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   start?: string | null;
   end?: string | null;
+  photos_projet?: {
+    docs?: (string | Photo)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -222,16 +288,20 @@ export interface Magazine {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "photos".
+ * via the `definition` "payload-kv".
  */
-export interface Photo {
+export interface PayloadKv {
   id: string;
-  file: string | Media;
-  alt: string;
-  exposition?: (string | null) | Exposition;
-  projet?: (string | null) | Projet;
-  updatedAt: string;
-  createdAt: string;
+  key: string;
+  data:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -356,8 +426,10 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface ExpositionsSelect<T extends boolean = true> {
   name?: T;
+  description?: T;
   start?: T;
   end?: T;
+  photos_expo?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -367,8 +439,10 @@ export interface ExpositionsSelect<T extends boolean = true> {
  */
 export interface ProjetsSelect<T extends boolean = true> {
   name?: T;
+  description?: T;
   start?: T;
   end?: T;
+  photos_projet?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -399,12 +473,23 @@ export interface MagazineSelect<T extends boolean = true> {
  * via the `definition` "photos_select".
  */
 export interface PhotosSelect<T extends boolean = true> {
+  _photos_photos_projet_order?: T;
+  _photos_photos_expo_order?: T;
   file?: T;
-  alt?: T;
+  title?: T;
+  caption?: T;
   exposition?: T;
   projet?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-kv_select".
+ */
+export interface PayloadKvSelect<T extends boolean = true> {
+  key?: T;
+  data?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

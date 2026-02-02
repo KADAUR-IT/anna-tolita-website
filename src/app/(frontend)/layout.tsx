@@ -1,9 +1,9 @@
 import React from 'react'
-import "@/styles/globals.css"
+import '@/styles/globals.css'
 import './styles.css'
 import Navbar from '@/components/constants/Navbar'
 import Footer from '@/components/constants/Footer'
-import {Logo} from '@/components/constants/Logo'
+import { Logo } from '@/components/constants/Logo'
 import { headers } from 'next/headers'
 import { getPayload } from 'payload'
 import payloadConfig from '@/payload.config'
@@ -22,34 +22,32 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const { children } = props
 
   const headerList = await headers()
-  const pathname = headerList.get("x-current-path") || ""
+  const pathname = headerList.get('x-current-path') || ''
 
-  if(pathname.startsWith("/admin")) return <>{children}</>
+  if (pathname.startsWith('/admin')) return <>{children}</>
 
   const payload = await getPayload({ config: payloadConfig })
   const settings = await payload.findGlobal({
-      slug: "settings"
+    slug: 'settings',
   })
 
   const inMaintenance = settings.maintenanceMode || false
 
-  if(inMaintenance && !pathname.startsWith("/maintenance"))
-    {
-        console.log("bye")
-        console.log(pathname)
-        return redirect('/maintenance');
-    }
+  if (inMaintenance && !pathname.startsWith('/maintenance')) {
+    console.log('bye')
+    console.log(pathname)
+    return redirect('/maintenance')
+  }
 
-    if(!inMaintenance && pathname.startsWith("/maintenance"))
-    {
-        console.log("hello")
-        return redirect('/');
-    }
+  if (!inMaintenance && pathname.startsWith('/maintenance')) {
+    console.log('hello')
+    return redirect('/')
+  }
 
   return (
     <html lang="fr">
       <body>
-        <div className='flex flex-col max-h-screen min-h-0 h-screen'>
+        <div className="flex flex-col min-h-screen">
           <Logo />
           <Navbar />
           {children}

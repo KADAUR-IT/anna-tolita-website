@@ -45,6 +45,7 @@ main{
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 80%;
 }
 
 /*.carousel-cell {
@@ -63,7 +64,6 @@ main{
 }*/
 
 .flickity-viewport{
-  height: 100% !important;
   width: 100%;
   display: flex;
   align-items: center;
@@ -71,8 +71,55 @@ main{
 }
 
 .flickity-slider{
-  height: 100% !important;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.payload-richtext
+{
+  color: black;
+
+  a {
+    color: var(--color-lila);
+    text-decoration: underline;
+
+    &:hover {
+      color: var(--color-dark-lila);
+    }
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    line-height: 2.75rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    line-height: 2.25rem;
+  }
+
+  h3 {
+    font-size: 1.75rem;
+    line-height: 2rem;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+  }
+
+
+
+  ul, ol {
+    margin: 0 20px;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  ul {
+    list-style: disc;
+  }
 }
