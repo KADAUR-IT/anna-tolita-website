@@ -8,6 +8,7 @@ import { convertDate } from '@/utils/dateUtils'
 import Image from 'next/image'
 import NoContent from '@/components/NoContent'
 import { faNewspaper } from '@fortawesome/free-solid-svg-icons'
+import RichText from '@/components/RichText'
 
 interface NewsClientPageProps {
   news: News[]
@@ -72,7 +73,7 @@ export default function NewsClientPage({ news, magazine }: NewsClientPageProps) 
           <h2 className="font-bold text-xl">{news.title}</h2>
           <p className="text-gray-600">{magazine.name}</p>
           <p className="text-gray-600">{convertDate(news.publishedDate, optionsDate)}</p>
-          <p className="text-sm">{news.description}</p>
+          {news.description && <RichText className="text-sm" data={news.description} />}
         </div>
       </div>
     )

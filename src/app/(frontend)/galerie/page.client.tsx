@@ -185,7 +185,7 @@ export default function GalerieClientPage({ media, exposition, projet }: Galerie
       {gridRender.length && filter ? (
         <div className="w-full justify-center">
           <h1 className="text-2xl font-bold mb-4 text-(--color-lila) text-center">{filter.name}</h1>
-          {filter.description && <RichText data={filter.description} />}
+          {filter.description && <RichText className="text-[20px]" data={filter.description} />}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
             {gridRender}
           </div>

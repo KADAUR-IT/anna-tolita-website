@@ -28,6 +28,8 @@ export default function Carousel({
     prevNextButtons: true,
     imagesLoaded: true,
     adaptiveHeight: true,
+    groupCells: false,
+    draggable: true,
     initialIndex: activeSlide,
   }
 

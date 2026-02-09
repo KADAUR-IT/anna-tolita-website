@@ -15,11 +15,13 @@ export default async function GaleriePage() {
   const resExposition = await payload.find({
     collection: 'expositions',
     limit: 0,
+    sort: '-start',
   })
 
   const resProjet = await payload.find({
     collection: 'projets',
     limit: 0,
+    sort: '-start',
   })
 
   const media = resMedia.docs
