@@ -2,8 +2,8 @@
 
 import { Magazine, Media, News } from '@/payload-types'
 import React, { useEffect, useState } from 'react'
-import MobileFilterSection from '../galerie/_components/MobileFilterSection'
-import FilterSection from '../galerie/_components/FilterSection'
+import MobileFilterSection from '../../galerie/_components/MobileFilterSection'
+import FilterSection from '../../galerie/_components/FilterSection'
 import { convertDate } from '@/utils/dateUtils'
 import Image from 'next/image'
 import NoContent from '@/components/NoContent'
@@ -16,13 +16,7 @@ interface NewsClientPageProps {
 }
 
 export default function NewsClientPage({ news, magazine }: NewsClientPageProps) {
-  const itemsFilter = [{ name: 'Magazine', type: 'magazine', items: magazine }]
-
-  const [typeFilter, setTypeFilter] = useState<string>('magazine')
-  const [filter, setFilter] = useState<Magazine | null>(magazine[0] || null)
-  const [newsFiltered, setNewsFiltered] = useState(
-    news.filter((p) => (p.magazine as Magazine).id === filter?.id),
-  )
+  const [newsFiltered, setNewsFiltered] = useState(news)
 
   const [width, setWidth] = useState(0)
   const optionsDate: Intl.DateTimeFormatOptions = {
@@ -36,18 +30,6 @@ export default function NewsClientPage({ news, magazine }: NewsClientPageProps) 
       setWidth(window.innerWidth)
     }
   })
-
-  const allNews = () => {
-    setNewsFiltered(news)
-    setFilter(null)
-  }
-
-  const handleFilter = (idFilter: string, typeFilter: string, isAdded: boolean) => {
-    setTypeFilter(typeFilter)
-    setFilter(magazine.find((p) => p.id === idFilter) || null)
-
-    setNewsFiltered(news.filter((p) => (p.magazine as Magazine).id === idFilter))
-  }
 
   const gridRender = newsFiltered.map((news, index) => {
     const thumbnail: Media = news.thumbnail as Media
@@ -81,14 +63,6 @@ export default function NewsClientPage({ news, magazine }: NewsClientPageProps) 
 
   return (
     <>
-      {filter && (
-        <FilterSection
-          handleFilter={handleFilter}
-          filters={itemsFilter}
-          currentTypeFilter={typeFilter}
-          currentFilter={filter.id}
-        />
-      )}
       {gridRender.length ? (
         <div className="grid grid-cols-1 md:grid-cols-2 text-black gap-[30px] w-full">
           {gridRender}

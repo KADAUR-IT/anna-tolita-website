@@ -3,38 +3,21 @@
 import { Exposition, Media, Photo, Projet } from '@/payload-types'
 import Image from 'next/image'
 import React, { useEffect, useRef, useState } from 'react'
-import FilterSection from './_components/FilterSection'
-import MobileFilterSection from './_components/MobileFilterSection'
+import FilterSection from '../_components/FilterSection'
+import MobileFilterSection from '../_components/MobileFilterSection'
 import NoContent from '@/components/NoContent'
 import { faImage } from '@fortawesome/free-solid-svg-icons'
-import Carousel from './_components/Carousel'
+import Carousel from '../_components/Carousel'
 import RichText from '@/components/RichText'
 
 interface GalerieClientPageProps {
+  galerie: Exposition | Projet
   media: Photo[]
-  exposition: Exposition[]
-  projet: Projet[]
+  typeFilter: 'projets' | 'expositions'
 }
 
-export default function GalerieClientPage({ media, exposition, projet }: GalerieClientPageProps) {
-  const itemsFilter = [
-    { name: 'Projet', type: 'projet', items: projet },
-    { name: 'Exposition', type: 'expo', items: exposition },
-  ]
-
-  const [typeFilter, setTypeFilter] = useState<string>(
-    projet.length ? 'projet' : exposition.length ? 'expo' : '',
-  )
-  const [filter, setFilter] = useState<Projet | Exposition | null>(
-    projet.length ? projet[0] : exposition.length ? exposition[0] : null,
-  )
-  const [mediaFiltered, setMediaFiltered] = useState(
-    media.filter(
-      (m) =>
-        (m.projet && (m.projet as Projet).id === filter?.id) ||
-        (m.exposition && (m.exposition as Exposition).id === filter?.id),
-    ),
-  )
+export default function GalerieClientPage({ galerie, media, typeFilter }: GalerieClientPageProps) {
+  const [mediaFiltered, setMediaFiltered] = useState<Photo[]>(media)
 
   const [width, setWidth] = useState(0)
   const [activeSlide, setActiveSlide] = useState(0)
@@ -70,40 +53,6 @@ export default function GalerieClientPage({ media, exposition, projet }: Galerie
       })
   }
 
-  const handleFilter = (idFilter: string, typeFilter: string, isAdded: boolean) => {
-    const newMedias = []
-
-    setTypeFilter(typeFilter)
-    setFilter(
-      projet.find((p) => p.id === idFilter) || exposition.find((e) => e.id === idFilter) || null,
-    )
-
-    switch (typeFilter) {
-      case 'projet':
-        newMedias.push(
-          ...media.filter((m) =>
-            projet
-              .find((p) => p.id === idFilter)
-              ?.photos_projet?.docs?.map((ph) => (ph as Photo).id)
-              .includes(m.id),
-          ),
-        )
-        break
-      case 'expo':
-        newMedias.push(
-          ...media.filter((m) =>
-            exposition
-              .find((e) => e.id === idFilter)
-              ?.photos_expo?.docs?.map((ph) => (ph as Photo).id)
-              .includes(m.id),
-          ),
-        )
-        break
-    }
-
-    setMediaFiltered(newMedias)
-  }
-
   const handleOpenImage = (image: number = -1) => {
     const el = document.getElementById('image-handler')
 
@@ -127,13 +76,13 @@ export default function GalerieClientPage({ media, exposition, projet }: Galerie
   const sortFunction = (photo1: Photo, photo2: Photo): number => {
     if (!typeFilter) return 0
 
-    if (typeFilter === 'projet') {
+    if (typeFilter === 'projets') {
       if (!photo1._photos_photos_projet_order || !photo2._photos_photos_projet_order) return 0
 
       return photo1._photos_photos_projet_order < photo2._photos_photos_projet_order ? -1 : 1
     }
 
-    if (typeFilter === 'expo') {
+    if (typeFilter === 'expositions') {
       if (!photo1._photos_photos_expo_order || !photo2._photos_photos_expo_order) return 0
       return photo1._photos_photos_expo_order < photo2._photos_photos_expo_order ? -1 : 1
     }
@@ -173,19 +122,12 @@ export default function GalerieClientPage({ media, exposition, projet }: Galerie
 
   return (
     <>
-      {filter && (
-        <FilterSection
-          handleFilter={handleFilter}
-          filters={itemsFilter}
-          currentTypeFilter={typeFilter}
-          currentFilter={filter.id}
-        />
-      )}
-
-      {gridRender.length && filter ? (
+      {gridRender.length ? (
         <div className="w-full justify-center">
-          <h1 className="text-2xl font-bold mb-4 text-(--color-lila) text-center">{filter.name}</h1>
-          {filter.description && <RichText className="text-[20px]" data={filter.description} />}
+          <h1 className="text-2xl font-bold mb-4 text-(--color-lila) text-center">
+            {galerie.name}
+          </h1>
+          {galerie.description && <RichText className="text-[20px]" data={galerie.description} />}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
             {gridRender}
           </div>

@@ -4,20 +4,17 @@ import { Filters } from './FilterSection'
 
 interface FilterCollapsibleProps {
   filter: Filters
-  handleFilter: (idFilter: string, typeFilter: string, isAdded: boolean) => void
   currentTypeFilter: string
   currentFilter: string
 }
 
 export default function FilterCollapsible({
   filter,
-  handleFilter,
   currentTypeFilter,
   currentFilter,
 }: FilterCollapsibleProps) {
-  const toggleFilter = (id: string, filter: string) => {
-    handleFilter(id, filter, true)
-  }
+  const section =
+    currentTypeFilter === 'magazine' ? '/news/' : '/galerie/' + currentTypeFilter + '/'
 
   return (
     <>
@@ -30,14 +27,14 @@ export default function FilterCollapsible({
       >
         {filter.items.map((item) => {
           return (
-            <button
+            <a
               id={'filter-' + filter.type + '-' + item.id}
               key={item.id}
-              onClick={() => toggleFilter(item.id.toString(), filter.type)}
+              href={section + item.id}
               className={`px-4 rounded text-left w-full hover:bg-(--color-dark-cream) cursor-pointer filters-btn ${currentFilter === item.id && 'bg-(--color-green) text-(--color-cream) hover:bg-(--color-dark-green)'}`}
             >
               {item.name}
-            </button>
+            </a>
           )
         })}
       </div>
