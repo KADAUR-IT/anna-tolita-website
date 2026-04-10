@@ -13,6 +13,9 @@ export default function FilterCollapsible({
   currentTypeFilter,
   currentFilter,
 }: FilterCollapsibleProps) {
+  const section =
+    currentTypeFilter === 'magazine' ? '/news/' : '/galerie/' + currentTypeFilter + '/'
+
   return (
     <>
       <ButtonFilter key={filter.name} id={filter.type} currentTypeFilter={currentTypeFilter}>
@@ -27,7 +30,7 @@ export default function FilterCollapsible({
             <a
               id={'filter-' + filter.type + '-' + item.id}
               key={item.id}
-              href={'/galerie/' + filter.type + '/' + item.id}
+              href={section + item.id}
               className={`px-4 rounded text-left w-full hover:bg-(--color-dark-cream) cursor-pointer filters-btn ${currentFilter === item.id && 'bg-(--color-green) text-(--color-cream) hover:bg-(--color-dark-green)'}`}
             >
               {item.name}

@@ -19,11 +19,16 @@ export default async function Navbar() {
     sort: '-start',
   })
 
+  const magNews = await payload.find({
+    collection: 'magazine',
+    limit: 1,
+  })
+
   const links = [
     { icon: faHome, href: '/', isActive: '/' },
     { icon: faFile, href: '/cv', isActive: '/cv' },
     { icon: faImages, href: '/galerie/projets/' + resProjet.docs[0].id, isActive: '/galerie' },
-    { icon: faNewspaper, href: '/news', isActive: '/news' },
+    { icon: faNewspaper, href: '/news/' + magNews.docs[0].id, isActive: '/news' },
     { icon: faPhone, href: '/contact', isActive: '/contact' },
   ]
 

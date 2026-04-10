@@ -22,12 +22,12 @@ export default async function GaleriePage({ params }: { params: Promise<{ segmen
   })
 
   return (
-    <div className="flex flex-col md:flex-row m-4 md:m-8 md:gap-8">
+    <>
       <GalerieClientPage
         galerie={res as any}
         media={resMedia.docs as any}
         typeFilter={segments[0] as 'projets' | 'expositions'}
       />
-    </div>
+    </>
   )
 }
