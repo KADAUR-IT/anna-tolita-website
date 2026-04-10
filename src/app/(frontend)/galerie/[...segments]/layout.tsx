@@ -5,7 +5,7 @@ import payloadConfig from '@/payload.config'
 
 export default async function GalerieLayout(props: {
   children: React.ReactNode
-  params: { segments: string[] }
+  params: Promise<{ segments: string[] }>
 }) {
   const { children } = props
   const { segments } = await props.params
