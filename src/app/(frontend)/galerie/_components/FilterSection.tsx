@@ -7,7 +7,6 @@ import { CollectionConfig } from 'payload'
 import FilterCollapsible from './FilterCollapsible'
 
 interface FilterSectionProps {
-  handleFilter: (idFilter: string, typeFilter: string, isAdded: boolean) => void
   filters: Filters[]
   currentTypeFilter: string
   currentFilter: string
@@ -20,7 +19,6 @@ export interface Filters {
 }
 
 export default function FilterSection({
-  handleFilter,
   filters,
   currentTypeFilter,
   currentFilter,
@@ -30,7 +28,6 @@ export default function FilterSection({
       <FilterCollapsible
         key={filter.name}
         filter={filter}
-        handleFilter={handleFilter}
         currentTypeFilter={currentTypeFilter}
         currentFilter={currentFilter}
       />
