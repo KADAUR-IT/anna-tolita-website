@@ -13,8 +13,7 @@ export default function FilterCollapsible({
   currentTypeFilter,
   currentFilter,
 }: FilterCollapsibleProps) {
-  const section =
-    currentTypeFilter === 'magazine' ? '/news/' : '/galerie/' + currentTypeFilter + '/'
+  const section = currentTypeFilter === 'magazine' ? '/news/' : '/galerie/' + filter.type + '/'
 
   return (
     <>
