@@ -79,14 +79,7 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {
-    expositions: {
-      photos_expo: 'photos';
-    };
-    projets: {
-      photos_projet: 'photos';
-    };
-  };
+  collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -206,27 +199,6 @@ export interface Exposition {
   } | null;
   start?: string | null;
   end?: string | null;
-  photos_expo?: {
-    docs?: (string | Photo)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "photos".
- */
-export interface Photo {
-  id: string;
-  _photos_photos_projet_order?: string | null;
-  _photos_photos_expo_order?: string | null;
-  file: string | Media;
-  title: string;
-  caption?: string | null;
-  exposition?: (string | null) | Exposition;
-  projet?: (string | null) | Projet;
   updatedAt: string;
   createdAt: string;
 }
@@ -254,11 +226,6 @@ export interface Projet {
   } | null;
   start?: string | null;
   end?: string | null;
-  photos_projet?: {
-    docs?: (string | Photo)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
   updatedAt: string;
   createdAt: string;
 }
@@ -297,6 +264,22 @@ export interface News {
 export interface Magazine {
   id: string;
   name?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "photos".
+ */
+export interface Photo {
+  id: string;
+  file: string | Media;
+  title: string;
+  caption?: string | null;
+  exposition?: (string | null) | Exposition;
+  orderExposition?: number | null;
+  projet?: (string | null) | Projet;
+  orderProjet?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -443,7 +426,6 @@ export interface ExpositionsSelect<T extends boolean = true> {
   description?: T;
   start?: T;
   end?: T;
-  photos_expo?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -456,7 +438,6 @@ export interface ProjetsSelect<T extends boolean = true> {
   description?: T;
   start?: T;
   end?: T;
-  photos_projet?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -487,13 +468,13 @@ export interface MagazineSelect<T extends boolean = true> {
  * via the `definition` "photos_select".
  */
 export interface PhotosSelect<T extends boolean = true> {
-  _photos_photos_projet_order?: T;
-  _photos_photos_expo_order?: T;
   file?: T;
   title?: T;
   caption?: T;
   exposition?: T;
+  orderExposition?: T;
   projet?: T;
+  orderProjet?: T;
   updatedAt?: T;
   createdAt?: T;
 }

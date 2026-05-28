@@ -9,6 +9,7 @@ import NoContent from '@/components/NoContent'
 import { faImage } from '@fortawesome/free-solid-svg-icons'
 import Carousel from '../_components/Carousel'
 import RichText from '@/components/RichText'
+import ImageThumbnail from '@/components/ImageThumbnail'
 
 interface GalerieClientPageProps {
   galerie: Exposition | Projet
@@ -77,46 +78,41 @@ export default function GalerieClientPage({ galerie, media, typeFilter }: Galeri
     if (!typeFilter) return 0
 
     if (typeFilter === 'projets') {
-      if (!photo1._photos_photos_projet_order || !photo2._photos_photos_projet_order) return 0
+      const nextOrder1 =
+        typeof photo1.orderProjet === 'number'
+          ? photo1.orderProjet
+          : Number(photo1._photos_photos_projet_order || Number.MAX_SAFE_INTEGER)
+      const nextOrder2 =
+        typeof photo2.orderProjet === 'number'
+          ? photo2.orderProjet
+          : Number(photo2._photos_photos_projet_order || Number.MAX_SAFE_INTEGER)
 
-      return photo1._photos_photos_projet_order < photo2._photos_photos_projet_order ? -1 : 1
+      return nextOrder1 < nextOrder2 ? -1 : 1
     }
 
     if (typeFilter === 'expositions') {
-      if (!photo1._photos_photos_expo_order || !photo2._photos_photos_expo_order) return 0
-      return photo1._photos_photos_expo_order < photo2._photos_photos_expo_order ? -1 : 1
+      const nextOrder1 =
+        typeof photo1.orderExposition === 'number'
+          ? photo1.orderExposition
+          : Number(photo1._photos_photos_expo_order || Number.MAX_SAFE_INTEGER)
+      const nextOrder2 =
+        typeof photo2.orderExposition === 'number'
+          ? photo2.orderExposition
+          : Number(photo2._photos_photos_expo_order || Number.MAX_SAFE_INTEGER)
+      return nextOrder1 < nextOrder2 ? -1 : 1
     }
 
     return 0
   }
 
   const gridRender = mediaFiltered.sort(sortFunction).map((photo, index) => {
-    const mediaPhoto = photo.file as Media
-
     return (
-      <div
-        key={'img-' + index}
-        onClick={() => {
-          handleOpenImage(mediaFiltered.indexOf(photo))
-        }}
-        className={
-          'bg-(--color-dark-cream) rounded-[15px] flex items-center justify-center overflow-hidden group h-[200px] w-full relative'
-        }
-      >
-        <Image
-          src={mediaPhoto.url as string}
-          alt={mediaPhoto.alt}
-          width={mediaPhoto.width as number}
-          height={mediaPhoto.height as number}
-          className={`object-cover w-full h-full group-hover:scale-115 transition-all duration-300 cursor-pointer`}
-        />
-        <div className="absolute top-0 left-0 w-full h-full text-white p-2 opacity-0 group-hover:opacity-100 group-hover:bg-[rgba(0,0,0,0.5)] transition-all duration-300 flex flex-col justify-center items-center text-center">
-          <p className="font-bold text-base">{photo.title && photo.title}</p>
-          <p className="text-sm max-w-full overflow-hidden truncate h-5">
-            {photo.caption && photo.caption}
-          </p>
-        </div>
-      </div>
+      <ImageThumbnail
+        key={photo.id}
+        photo={photo}
+        index={mediaFiltered.indexOf(photo)}
+        handleOpenImage={handleOpenImage}
+      />
     )
   })
 
