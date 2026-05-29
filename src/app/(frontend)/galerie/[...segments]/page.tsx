@@ -3,16 +3,23 @@ import { CollectionSlug, getPayload } from 'payload'
 import config from '@/payload.config'
 import GalerieClientPage from './page.client'
 import ImageHandler from '@/utils/singleton/ImageHandler'
+import { redirect } from 'next/navigation'
 
 export default async function GaleriePage({ params }: { params: Promise<{ segments: string[] }> }) {
   const { segments } = await params
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
-  const res = await payload.findByID({
-    collection: segments[0] as CollectionSlug,
-    id: segments[1],
-  })
+  let res = null
+
+  try {
+    res = await payload.findByID({
+      collection: segments[0] as CollectionSlug,
+      id: segments[1],
+    })
+  } catch (error) {
+    redirect('/404')
+  }
 
   const imageCache = ImageHandler.getInstance(payload).getCache()
 
