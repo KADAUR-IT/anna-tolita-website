@@ -78,27 +78,15 @@ export default function GalerieClientPage({ galerie, media, typeFilter }: Galeri
     if (!typeFilter) return 0
 
     if (typeFilter === 'projets') {
-      const nextOrder1 =
-        typeof photo1.orderProjet === 'number'
-          ? photo1.orderProjet
-          : Number(photo1._photos_photos_projet_order || Number.MAX_SAFE_INTEGER)
-      const nextOrder2 =
-        typeof photo2.orderProjet === 'number'
-          ? photo2.orderProjet
-          : Number(photo2._photos_photos_projet_order || Number.MAX_SAFE_INTEGER)
+      const nextOrder1 = Number(photo1.orderProjet || Number.MAX_SAFE_INTEGER)
+      const nextOrder2 = Number(photo2.orderProjet || Number.MAX_SAFE_INTEGER)
 
       return nextOrder1 < nextOrder2 ? -1 : 1
     }
 
     if (typeFilter === 'expositions') {
-      const nextOrder1 =
-        typeof photo1.orderExposition === 'number'
-          ? photo1.orderExposition
-          : Number(photo1._photos_photos_expo_order || Number.MAX_SAFE_INTEGER)
-      const nextOrder2 =
-        typeof photo2.orderExposition === 'number'
-          ? photo2.orderExposition
-          : Number(photo2._photos_photos_expo_order || Number.MAX_SAFE_INTEGER)
+      const nextOrder1 = Number(photo1.orderExposition || Number.MAX_SAFE_INTEGER)
+      const nextOrder2 = Number(photo2.orderExposition || Number.MAX_SAFE_INTEGER)
       return nextOrder1 < nextOrder2 ? -1 : 1
     }
 
