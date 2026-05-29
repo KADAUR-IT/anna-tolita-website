@@ -32,9 +32,25 @@ export const Photos: CollectionConfig = {
       relationTo: 'expositions',
     },
     {
+      name: 'orderExposition',
+      type: 'number',
+      label: 'Ordre exposition',
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    {
       name: 'projet',
       type: 'relationship',
       relationTo: 'projets',
+    },
+    {
+      name: 'orderProjet',
+      type: 'number',
+      label: 'Ordre projet',
+      admin: {
+        position: 'sidebar',
+      },
     },
   ],
 }
