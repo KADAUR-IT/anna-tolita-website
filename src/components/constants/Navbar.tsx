@@ -11,6 +11,9 @@ import NavbarLink from './NavbarLink'
 import { getPayload } from 'payload'
 import payloadConfig from '@/payload.config'
 
+export const dynamic = 'auto'
+export const revalidate = 60
+
 export default async function Navbar() {
   const payload = await getPayload({ config: payloadConfig })
   const resProjet = await payload.find({
