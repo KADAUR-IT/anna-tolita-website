@@ -5,6 +5,7 @@ import Image from 'next/image'
 import React, { useState, useEffect } from 'react'
 import Flickity from 'react-flickity-component'
 import 'flickity/css/flickity.css'
+import { imageLoader } from '@/utils/images/imagesLoader'
 
 interface CarouselProps {
   photos: Media[]
@@ -41,6 +42,7 @@ export default function Carousel({
         alt={photo.alt as string}
         height={photo.height as number}
         width={photo.width as number}
+        loader={imageLoader}
         className={
           'carousel-cell object-contain max-w-[calc(100dvw-4em)] h-auto md:w-auto md:h-[80vh]'
         }

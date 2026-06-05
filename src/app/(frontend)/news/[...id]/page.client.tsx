@@ -9,6 +9,7 @@ import Image from 'next/image'
 import NoContent from '@/components/NoContent'
 import { faNewspaper } from '@fortawesome/free-solid-svg-icons'
 import RichText from '@/components/RichText'
+import { imageLoader } from '@/utils/images/imagesLoader'
 
 interface NewsClientPageProps {
   news: News[]
@@ -48,6 +49,7 @@ export default function NewsClientPage({ news, magazine }: NewsClientPageProps) 
             alt={thumbnail.alt as string}
             width={thumbnail.width as number}
             height={thumbnail.height as number}
+            loader={imageLoader}
             className="h-full w-auto object-cover"
           />
         </div>
