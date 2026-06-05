@@ -1,5 +1,6 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
 
 type ReorderItem = {
@@ -18,9 +19,11 @@ type ReorderPhotosFieldProps = {
 }
 
 const getDocIDFromPath = (): string | null => {
-  if (typeof window === 'undefined') return null
+  const pathname = usePathname()
 
-  const parts = window.location.pathname.split('/').filter(Boolean)
+  //if (typeof window === 'undefined') return null
+
+  const parts = pathname.split('/').filter(Boolean)
   const index = parts.findIndex((part) => part === 'collections')
   if (index < 0 || !parts[index + 2]) return null
 
