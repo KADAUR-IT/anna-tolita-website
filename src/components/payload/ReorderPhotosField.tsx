@@ -113,9 +113,40 @@ export default function ReorderPhotosField(props: ReorderPhotosFieldProps) {
       })
 
       if (!response.ok) throw new Error('save-failed')
+
       setMessage('Ordre sauvegarde.')
     } catch {
       setMessage('Echec de sauvegarde.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleRemove = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    setMessage(null)
+
+    try {
+      const photoID = e.currentTarget.dataset.id
+
+      console.log(photoID)
+
+      const response = await fetch(`/api/photos/${photoID}/remove-from-list`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          field: relationField,
+        }),
+      })
+
+      if (!response.ok) throw new Error('save-failed')
+      setItems(items.filter((i) => i.id !== photoID))
+      setMessage('Photos supprimée de la liste.')
+    } catch {
+      setMessage('Erreur lors de la suppression de la liste')
     } finally {
       setSaving(false)
     }
@@ -288,6 +319,9 @@ export default function ReorderPhotosField(props: ReorderPhotosFieldProps) {
                 </div>
               ) : null}
             </div>
+            <button data-id={item.id} onClick={handleRemove}>
+              Retirer
+            </button>
             <span style={{ opacity: 0.45, fontSize: '1rem', userSelect: 'none' }}>::</span>
           </div>
         ))}
