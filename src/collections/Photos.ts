@@ -53,4 +53,38 @@ export const Photos: CollectionConfig = {
       },
     },
   ],
+  endpoints: [
+    {
+      path: '/:id/remove-from-list',
+      method: 'post',
+      handler: async (req) => {
+        if (!req.user) {
+          return Response.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+
+        const { id } = req.routeParams || {}
+
+        if (!id && typeof id !== 'string') {
+          return Response.json({ error: 'Missing photos id' }, { status: 400 })
+        }
+
+        const { field } = (await req.json?.()) || {}
+
+        const entries = new Map([])
+        entries.set(field, null)
+
+        const data = Object.fromEntries(entries)
+
+        await Promise.resolve(
+          await req.payload.update({
+            collection: 'photos',
+            id: id as string,
+            data,
+          }),
+        )
+
+        return Response.json({ ok: true })
+      },
+    },
+  ],
 }
