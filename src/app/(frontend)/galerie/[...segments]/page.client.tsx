@@ -93,12 +93,14 @@ export default function GalerieClientPage({ galerie, media, typeFilter }: Galeri
     return 0
   }
 
-  const gridRender = mediaFiltered.sort(sortFunction).map((photo, index) => {
+  const sortedMedia = [...(mediaFiltered || [])].sort(sortFunction)
+
+  const gridRender = sortedMedia.map((photo, index) => {
     return (
       <ImageThumbnail
         key={photo.id}
         photo={photo}
-        index={mediaFiltered.indexOf(photo)}
+        index={sortedMedia.indexOf(photo)}
         handleOpenImage={handleOpenImage}
       />
     )
@@ -109,9 +111,9 @@ export default function GalerieClientPage({ galerie, media, typeFilter }: Galeri
       {gridRender.length ? (
         <div className="w-full justify-center">
           <h1 className="text-2xl font-bold mb-4 text-(--color-lila) text-center">
-            {galerie.name}
+            {galerie?.name || ''}
           </h1>
-          {galerie.description && <RichText className="text-[20px]" data={galerie.description} />}
+          {galerie?.description && <RichText className="text-[20px]" data={galerie.description} />}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
             {gridRender}
           </div>

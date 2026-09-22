@@ -16,22 +16,39 @@ export const revalidate = 60
 
 export default async function Navbar() {
   const payload = await getPayload({ config: payloadConfig })
-  const resProjet = await payload.find({
-    collection: 'projets',
-    limit: 1,
-    sort: '-start',
-  })
+  let galerieHref = '/galerie'
+  let newsHref = '/news'
 
-  const magNews = await payload.find({
-    collection: 'magazine',
-    limit: 1,
-  })
+  try {
+    const resProjet = await payload.find({
+      collection: 'projets',
+      limit: 1,
+      sort: '-start',
+    })
+    if (resProjet.docs?.[0]?.id) {
+      galerieHref = '/galerie/projets/' + resProjet.docs[0].id
+    }
+  } catch (e) {
+    console.error('Navbar projet fetch error:', e)
+  }
+
+  try {
+    const magNews = await payload.find({
+      collection: 'magazine',
+      limit: 1,
+    })
+    if (magNews.docs?.[0]?.id) {
+      newsHref = '/news/' + magNews.docs[0].id
+    }
+  } catch (e) {
+    console.error('Navbar magazine fetch error:', e)
+  }
 
   const links = [
     { icon: faHome, href: '/', isActive: '/' },
     { icon: faFile, href: '/cv', isActive: '/cv' },
-    { icon: faImages, href: '/galerie/projets/' + resProjet.docs[0].id, isActive: '/galerie' },
-    { icon: faNewspaper, href: '/news/' + magNews.docs[0].id, isActive: '/news' },
+    { icon: faImages, href: galerieHref, isActive: '/galerie' },
+    { icon: faNewspaper, href: newsHref, isActive: '/news' },
     { icon: faPhone, href: '/contact', isActive: '/contact' },
   ]
 
