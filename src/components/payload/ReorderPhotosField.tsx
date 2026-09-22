@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useMemo, useState } from 'react'
+import AddPhotoModal from './AddPhotoModal'
 
 type ReorderItem = {
   id: string
@@ -38,6 +39,7 @@ export default function ReorderPhotosField(props: ReorderPhotosFieldProps) {
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [dragIndex, setDragIndex] = useState<number | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const docID = useMemo(() => getDocIDFromPath(), [])
 
@@ -217,114 +219,176 @@ export default function ReorderPhotosField(props: ReorderPhotosFieldProps) {
             Glisse-depose une photo pour la reordonner.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={handleSave}
-          disabled={saving}
-          style={{
-            padding: '0.5rem 0.9rem',
-            borderRadius: 6,
-            border: '1px solid var(--theme-elevation-250, #c9cad4)',
-            background: saving
-              ? 'var(--theme-elevation-100, #ececf0)'
-              : 'var(--theme-success-500, #2f855a)',
-            color: saving ? 'var(--theme-text, #111827)' : '#fff',
-            fontWeight: 600,
-            cursor: saving ? 'not-allowed' : 'pointer',
-            opacity: saving ? 0.8 : 1,
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {saving ? 'Sauvegarde...' : "Sauvegarder l'ordre"}
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(true)}
+            style={{
+              padding: '0.5rem 0.9rem',
+              borderRadius: 6,
+              border: '1px solid var(--theme-elevation-250, #c9cad4)',
+              background: 'var(--theme-elevation-0, #fff)',
+              color: 'var(--theme-text, #111827)',
+              fontWeight: 600,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            + Ajouter des photos
+          </button>
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={saving}
+            style={{
+              padding: '0.5rem 0.9rem',
+              borderRadius: 6,
+              border: '1px solid var(--theme-elevation-250, #c9cad4)',
+              background: saving
+                ? 'var(--theme-elevation-100, #ececf0)'
+                : 'var(--theme-success-500, #2f855a)',
+              color: saving ? 'var(--theme-text, #111827)' : '#fff',
+              fontWeight: 600,
+              cursor: saving ? 'not-allowed' : 'pointer',
+              opacity: saving ? 0.8 : 1,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {saving ? 'Sauvegarde...' : "Sauvegarder l'ordre"}
+          </button>
+        </div>
       </div>
 
       <div style={{ display: 'grid', gap: 8, padding: '0.875rem 1rem 1rem' }}>
-        {items.map((item, index) => (
+        {items.length === 0 ? (
           <div
-            key={item.id}
-            draggable
-            onDragStart={() => setDragIndex(index)}
-            onDragOver={(event) => event.preventDefault()}
-            onDrop={() => {
-              if (dragIndex === null) return
-              moveItem(dragIndex, index)
-              setDragIndex(null)
-            }}
-            onDragEnd={() => setDragIndex(null)}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              border: '1px solid var(--theme-elevation-100, #ececf0)',
-              borderRadius: 6,
-              padding: 8,
-              background:
-                dragIndex === index
-                  ? 'var(--theme-elevation-50, #f5f5f7)'
-                  : 'var(--theme-elevation-50',
+              padding: '2rem 1rem',
+              textAlign: 'center',
               color: 'var(--theme-text, #111827)',
-              cursor: 'grab',
+              opacity: 0.7,
+              fontSize: '0.95rem',
             }}
           >
-            <span
-              style={{
-                minWidth: 26,
-                fontWeight: 700,
-                color: 'var(--theme-text, #111827)',
-                opacity: 0.75,
-                textAlign: 'right',
-              }}
-            >
-              {index + 1}
-            </span>
+            Aucune photo associée à ce document pour le moment.
+            <div style={{ marginTop: '0.75rem' }}>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(true)}
+                style={{
+                  padding: '0.45rem 0.9rem',
+                  borderRadius: 6,
+                  border: '1px solid var(--theme-success-500, #2f855a)',
+                  background: 'transparent',
+                  color: 'var(--theme-success-600, #2f855a)',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                + Ajouter une photo
+              </button>
+            </div>
+          </div>
+        ) : (
+          items.map((item, index) => (
             <div
+              key={item.id}
+              draggable
+              onDragStart={() => setDragIndex(index)}
+              onDragOver={(event) => event.preventDefault()}
+              onDrop={() => {
+                if (dragIndex === null) return
+                moveItem(dragIndex, index)
+                setDragIndex(null)
+              }}
+              onDragEnd={() => setDragIndex(null)}
               style={{
-                width: 56,
-                height: 56,
-                borderRadius: 4,
-                overflow: 'hidden',
-                background: 'var(--theme-elevation-50, #f5f5f7)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
+                gap: 12,
                 border: '1px solid var(--theme-elevation-100, #ececf0)',
-                flexShrink: 0,
+                borderRadius: 6,
+                padding: 8,
+                background:
+                  dragIndex === index
+                    ? 'var(--theme-elevation-50, #f5f5f7)'
+                    : 'var(--theme-elevation-50',
+                color: 'var(--theme-text, #111827)',
+                cursor: 'grab',
               }}
             >
-              {item.fileURL ? (
-                <img
-                  src={item.fileURL}
-                  alt={item.title || 'photo'}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-              ) : (
-                <span style={{ opacity: 0.7, fontSize: '0.75rem' }}>No Img</span>
-              )}
+              <span
+                style={{
+                  minWidth: 26,
+                  fontWeight: 700,
+                  color: 'var(--theme-text, #111827)',
+                  opacity: 0.75,
+                  textAlign: 'right',
+                }}
+              >
+                {index + 1}
+              </span>
+              <div
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 4,
+                  overflow: 'hidden',
+                  background: 'var(--theme-elevation-50, #f5f5f7)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '1px solid var(--theme-elevation-100, #ececf0)',
+                  flexShrink: 0,
+                }}
+              >
+                {item.fileURL ? (
+                  <img
+                    src={item.fileURL}
+                    alt={item.title || 'photo'}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <span style={{ opacity: 0.7, fontSize: '0.75rem' }}>No Img</span>
+                )}
+              </div>
+              <div style={{ minWidth: 0, flexGrow: 1 }}>
+                <div style={{ fontWeight: 600 }}>{item.title || 'Sans titre'}</div>
+                {item.caption ? (
+                  <div
+                    style={{
+                      opacity: 0.75,
+                      fontSize: '0.85rem',
+                      marginTop: 2,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {item.caption}
+                  </div>
+                ) : null}
+              </div>
+              <button
+                type="button"
+                data-id={item.id}
+                onClick={handleRemove}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid var(--theme-elevation-200, #d9d9df)',
+                  borderRadius: 4,
+                  padding: '0.3rem 0.6rem',
+                  fontSize: '0.8rem',
+                  color: 'var(--theme-error-500, #dc2626)',
+                  cursor: 'pointer',
+                }}
+              >
+                Retirer
+              </button>
+              <span style={{ opacity: 0.45, fontSize: '1rem', userSelect: 'none' }}>::</span>
             </div>
-            <div style={{ minWidth: 0, flexGrow: 1 }}>
-              <div style={{ fontWeight: 600 }}>{item.title || 'Sans titre'}</div>
-              {item.caption ? (
-                <div
-                  style={{
-                    opacity: 0.75,
-                    fontSize: '0.85rem',
-                    marginTop: 2,
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  {item.caption}
-                </div>
-              ) : null}
-            </div>
-            <button data-id={item.id} onClick={handleRemove}>
-              Retirer
-            </button>
-            <span style={{ opacity: 0.45, fontSize: '1rem', userSelect: 'none' }}>::</span>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {message ? (
@@ -343,6 +407,19 @@ export default function ReorderPhotosField(props: ReorderPhotosFieldProps) {
           {message}
         </p>
       ) : null}
+
+      <AddPhotoModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        docID={docID}
+        relationField={relationField}
+        orderField={orderField}
+        currentPhotoIds={items.map((i) => i.id)}
+        nextOrder={items.length}
+        onPhotoAdded={() => {
+          void loadItems()
+        }}
+      />
     </div>
   )
 }
