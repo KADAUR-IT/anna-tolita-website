@@ -10,7 +10,12 @@ interface ImageThumbnailProps {
 }
 
 export default function ImageThumbnail({ photo, index, handleOpenImage }: ImageThumbnailProps) {
-  const mediaPhoto = photo.file as Media
+  const mediaPhoto =
+    typeof photo.file === 'object' && photo.file !== null ? (photo.file as Media) : null
+
+  if (!mediaPhoto?.url) {
+    return null
+  }
 
   return (
     <div
@@ -22,10 +27,10 @@ export default function ImageThumbnail({ photo, index, handleOpenImage }: ImageT
       }
     >
       <Image
-        src={mediaPhoto.url as string}
-        alt={mediaPhoto.alt}
-        width={mediaPhoto.width as number}
-        height={mediaPhoto.height as number}
+        src={mediaPhoto.url}
+        alt={mediaPhoto.alt || photo.title || ''}
+        width={mediaPhoto.width || 400}
+        height={mediaPhoto.height || 300}
         loader={imageLoader}
         className={`object-cover w-full h-full group-hover:scale-115 transition-all duration-300 cursor-pointer`}
       />

@@ -34,14 +34,18 @@ export default function Carousel({
     initialIndex: activeSlide,
   }
 
-  const photosRender = photos.map((photo, index) => {
+  const validPhotos = (photos || []).filter(
+    (photo): photo is Media => Boolean(photo && typeof photo === 'object' && photo.url && photo.id),
+  )
+
+  const photosRender = validPhotos.map((photo, index) => {
     return (
       <Image
-        key={photo.id}
+        key={photo.id || index}
         src={photo.url as string}
-        alt={photo.alt as string}
-        height={photo.height as number}
-        width={photo.width as number}
+        alt={(photo.alt as string) || ''}
+        height={(photo.height as number) || 600}
+        width={(photo.width as number) || 800}
         loader={imageLoader}
         className={
           'carousel-cell object-contain max-w-[calc(100dvw-4em)] h-auto md:w-auto md:h-[80vh]'
